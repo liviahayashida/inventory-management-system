@@ -118,6 +118,7 @@ from alembic import context
 
 # 2. Importa a base do banco de dados e as entidades (models)
 from app.database import Base
+import app.models
 from app.database.session import engine
 
 # IMPORTANTE: Todos os seus models precisam ser importados aqui para registrar no Base.metadata
@@ -129,7 +130,7 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-target_metadata = Base.metadata
+target_metadata = Base.metadata #antes desta linha ad models tem q ser importadas
 
 
 def run_migrations_offline() -> None:

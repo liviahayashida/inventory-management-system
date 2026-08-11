@@ -1,4 +1,3 @@
-# from .produto import Produto
-# from .usuario import Usuario
-from app.models.teste import Teste
 import app.models
+from app.models.teste import Teste
+from app.models.produto import Produto

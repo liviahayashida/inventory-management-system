@@ -2,7 +2,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.repositories.produto import ProdutoRepository
-from app.schemas import produto
+from app.repositories.categoria import CategoriaRepository
 from app.schemas.produto import ProdutoCreate, ProdutoUpdate
 
 
@@ -10,6 +10,7 @@ class ProdutoService:
 
     def __init__(self, db: Session):
         self.repository = ProdutoRepository(db)
+        self.categoria_repository = CategoriaRepository(db)
 
     def listar(self):
         return self.repository.get_all()
@@ -26,6 +27,17 @@ class ProdutoService:
         return produto
 
     def criar(self, produto_data: ProdutoCreate):
+        if produto_data.categoria_id is not None:
+            categoria = self.categoria_repository.get_active_by_id(
+            produto_data.categoria_id
+        )
+
+            if not categoria:
+                raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Categoria não encontrada ou está inativa."
+            )
+
         return self.repository.create(produto_data)
 
     def atualizar(
@@ -33,7 +45,7 @@ class ProdutoService:
         produto_id: int,
         produto_data: ProdutoUpdate
     ):
-        produto = self.repository.get_by_id(produto_id)
+        produto = self.repository.get_active_by_id(produto_id)
 
         if not produto:
             raise HTTPException(
@@ -41,27 +53,26 @@ class ProdutoService:
                 detail="Produto não encontrado."
             )
 
-        if not produto.ativo:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="Não é possível atualizar um produto inativo."
+        if produto_data.categoria_id is not None:
+            categoria = self.categoria_repository.get_active_by_id(
+                produto_data.categoria_id
             )
+
+            if not categoria:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Categoria não encontrada ou está inativa."
+                )
 
         return self.repository.update(produto, produto_data)
 
-    def remover(self, produto_id: int):
-        produto = self.repository.get_by_id(produto_id)
+    def excluir(self, produto_id: int):
+        produto = self.repository.get_active_by_id(produto_id)
 
         if not produto:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Produto não encontrado."
-            )
-
-        if not produto.ativo:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="Produto já está inativo."
             )
 
         return self.repository.delete(produto)

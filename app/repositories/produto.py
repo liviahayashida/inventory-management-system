@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+
 from app.models.produto import Produto
 from app.schemas.produto import ProdutoCreate, ProdutoUpdate
 
@@ -19,23 +20,25 @@ class ProdutoRepository:
     def get_by_id(self, produto_id: int):
         return self.db.query(Produto).filter(
             Produto.id == produto_id
-        ).first()  # select * from produtos where id=produto_id (nao filtra ativo)
+        ).first()
+
     def get_active_by_id(self, produto_id: int):
         return self.db.query(Produto).filter(
-            Produto.id ==produto_id,
-            Produto.ativo==True
+            Produto.id == produto_id,
+            Produto.ativo.is_(True)
         ).first()
 
     def create(self, produto_data: ProdutoCreate):
         produto = Produto(
             nome=produto_data.nome,
             descricao=produto_data.descricao,
-            preco=produto_data.preco
+            preco=produto_data.preco,
+            categoria_id=produto_data.categoria_id
         )
 
         self.db.add(produto)
         self.db.commit()
-        self.db.refresh(produto)  # atualiza o objeto python com os valores reais que estao no banco
+        self.db.refresh(produto)
 
         return produto
 

@@ -122,7 +122,7 @@ import app.models
 from app.database.session import engine
 
 # IMPORTANTE: Todos os seus models precisam ser importados aqui para registrar no Base.metadata
-from app.models.teste import Teste 
+# from app.models.teste import Teste 
 
 # 3. Configuração do Alembic e Metadata
 config = context.config

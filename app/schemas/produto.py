@@ -9,6 +9,7 @@ class ProdutoCreate(BaseModel):
     descricao: str | None = Field(default=None, max_length=255)
     preco: Decimal = Field(gt=0)
     categoria_id: int | None = None
+    fornecedor_id: int | None = None
 
 
 class ProdutoUpdate(BaseModel):
@@ -30,6 +31,8 @@ class ProdutoUpdate(BaseModel):
     )
 
     categoria_id: int | None = None
+
+    fornecedor_id: int | None = None
 
     @model_validator(mode="before")
     @classmethod
@@ -59,6 +62,7 @@ class ProdutoResponse(BaseModel):
     descricao: str | None
     preco: Decimal
     categoria_id: int | None
+    fornecedor_id: int | None = None
     ativo: bool
     criado_em: datetime
     atualizado_em: datetime

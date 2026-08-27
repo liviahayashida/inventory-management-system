@@ -33,6 +33,14 @@ class Produto(Base):
         back_populates="produtos"
     )
 
+    fornecedor_id = Column(
+        Integer, ForeignKey("fornecedores.id"), nullable=True
+    )
+
+    fornecedor = relationship(
+        "Fornecedor", back_populates="produtos"
+    )
+
     criado_em = Column(
         DateTime,
         server_default=func.now(),

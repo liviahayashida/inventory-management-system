@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import produto, categoria
+from app.routers import produto, categoria, fornecedor
 import app.database.session
 from app.api.routes.health import router as health_router
 
@@ -10,6 +10,7 @@ app = FastAPI(
 )#cria a aplicação
 app.include_router(produto.router)
 app.include_router(categoria.router)
+app.include_router(fornecedor.router)
 app.include_router(health_router)
 
 @app.get("/") #executa isso quando a rota raiz for acessada

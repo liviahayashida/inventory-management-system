@@ -33,7 +33,8 @@ class ProdutoRepository:
             nome=produto_data.nome,
             descricao=produto_data.descricao,
             preco=produto_data.preco,
-            categoria_id=produto_data.categoria_id
+            categoria_id=produto_data.categoria_id,
+            fornecedor_id=produto_data.fornecedor_id
         )
 
         self.db.add(produto)

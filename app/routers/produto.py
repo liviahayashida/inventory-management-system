@@ -82,4 +82,4 @@ def remover_produto(
 ):
     service = ProdutoService(db)
 
-    service.remover(produto_id)
+    service.excluir(produto_id)

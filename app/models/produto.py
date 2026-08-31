@@ -53,3 +53,9 @@ class Produto(Base):
         onupdate=func.now(),
         nullable=False
     )
+
+    estoque = relationship(
+        "Estoque",
+        back_populates="produto",
+        uselist=False
+    )
